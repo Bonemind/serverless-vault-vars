@@ -1,14 +1,23 @@
 {
-  "name": "serverless-vault-vars",
-  "version": "0.0.1",
-  "description": "Use hashi vault vars in your serverless.yml",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "axios": "^0.19.1"
-  }
+   "name": "serverless-vault-vars",
+   "version": "0.0.2",
+   "description": "Use hashi vault vars in your serverless.yml",
+   "main": "index.js",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Bonemind/serverless-vault-vars.git"
+   },
+   "keywords": [
+      "Hashi",
+      "Vault",
+      "Serverless"
+   ],
+   "author": "Bonemind",
+   "license": "MIT",
+   "dependencies": {
+      "axios": "^0.19.1"
+   }
 }
