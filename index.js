@@ -23,7 +23,6 @@ class ServerlessVaultPlugin {
 		// Init vars
 		this.vaultToken = this.determineVaultToken();
 		this.vaultAddress= this.detemineVaultAddress();
-		this.vaultVars = {};
 		this.resolveVaultVariable = this.resolveVaultVariable.bind(this);
 
 		// Detemine config
@@ -76,36 +75,29 @@ class ServerlessVaultPlugin {
 	}
 
 	async resolveVaultVariable(src) {
-		// We expect a path of the form /some/path.key and will then return a value
-		this.serverless.cli.log(src, LOGGING_ENTITY_NAME);
+		// We expect a path of the form some/path.key and will then return a value
 		const vaultVar = src.slice(6);
 		validateVaultVar(vaultVar);
 
 		const secretPath = vaultVar.split('.')[0];
 		const valuePath = vaultVar.split('.').slice(1);
 
-		this.serverless.cli.log(JSON.stringify(this.vaultVars), LOGGING_ENTITY_NAME);
-		if (!this.vaultVars[secretPath]) {
-			const urlParts = secretPath.split('/');
-			urlParts.splice(1, 0, 'data');
+		const urlParts = secretPath.split('/');
+		urlParts.splice(1, 0, 'data');
 
-			try {
-				const res = await this.axios.get(urlParts.join('/'));
-				this.vaultVars[secretPath] = res.data.data.data;
-			} catch(e) {
-				throw {
-					message: `Error communicating with vault: ${e.message} for var: ${src}`,
-					address: this.vaultAddress,
-					token: this.vaultToken
-				};
-			}
-			this.serverless.cli.log(JSON.stringify(this.vaultVars), LOGGING_ENTITY_NAME);
-		} else {
-			this.serverless.cli.log(`using cache for ${src}`, LOGGING_ENTITY_NAME);
+		let result = {};
+		try {
+			const res = await this.axios.get(urlParts.join('/'));
+			result = res.data.data.data;
+		} catch(e) {
+			throw {
+				message: `Error communicating with vault: ${e.message} for var: ${src}`,
+				address: this.vaultAddress,
+				token: this.vaultToken
+			};
 		}
 
-		const value = valuePath.reduce((acc, curr) => acc[curr], this.vaultVars[secretPath]);
-		this.serverless.cli.log(`${value}`, LOGGING_ENTITY_NAME);
+		const value = valuePath.reduce((acc, curr) => acc[curr], result);
 		if (value == null) {
 			this.serverless.cli.log(`WARNING: value is null or undefined for ${src}`, LOGGING_ENTITY_NAME);
 		}
