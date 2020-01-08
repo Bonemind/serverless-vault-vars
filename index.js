@@ -102,7 +102,7 @@ class ServerlessVaultPlugin {
 			this.serverless.cli.log(`WARNING: value is null or undefined for ${src}`, LOGGING_ENTITY_NAME);
 		}
 		
-		return src.slice(6);
+		return value;
 	}
 }
 
