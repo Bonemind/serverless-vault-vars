@@ -9,12 +9,12 @@ This plugin allows you to use Hashicorp vault secrets in your `serverless.yml`.
 In `serverless.yml`:
 ```
 plugins:
-  - serverless-vault-variables
+  - serverless-vault-vars
 ```
 
 ### Vault address
 
-By default the plugin will speak with a vault on `http://localhost:8200`. To use another url:
+By default the plugin will speak to a vault on `http://localhost:8200`. To use another url:
 
 In your `serverless.yml`
 ```
@@ -47,12 +47,14 @@ In `~/.vault-token` (same as vault cli):
 sometoken
 ```
 
+Priority is: serverless.yml > environment variable > token file
+
 ## Usage
 
 Once you've configured the plugin, you can use vault vars by referencing them with the `vault:` prefix.
-This should be followed by the secret's path, and then the key of the value you want:
+This should be followed by the secret's path, and then the key of the value you want as follows:
 
-Vault secret:
+Gien the following vault secret:
 ```
 path: secretapp/config
 structure:
@@ -61,7 +63,7 @@ username: someusername
 password: somepassword
 ```
 
-To get the username in your serverless yml:
+To get the info in your serverless yml:
 ```
 custom:
   username: ${vault:secretapp/config.username}
