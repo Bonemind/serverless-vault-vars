@@ -1,0 +1,20 @@
+
+service: testslsvars
+variablesResolutionMode: 20210326
+
+plugins:
+  - ../index.js
+
+custom:
+  foo: bar
+
+provider:
+  name: aws
+  region: "eu-west-2"
+  stage: api
+
+functions:
+  hello:
+    handler: src/handler.hello
+    environment:
+      TEST: ${vault:test/hello.test-secret}

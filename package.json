@@ -1,6 +1,6 @@
 {
    "name": "serverless-vault-vars",
-   "version": "0.0.2",
+   "version": "0.1.0",
    "description": "Use hashi vault vars in your serverless.yml",
    "main": "index.js",
    "scripts": {

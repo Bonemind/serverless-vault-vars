@@ -34,6 +34,16 @@ class ServerlessVaultPlugin {
 			headers: {'X-Vault-Token': this.vaultToken}
 		});
 
+		this.configurationVariablesSources = {
+			vault: {
+				resolve: async ({ address }) => {
+					const res = await this.resolveVaultVariable(address);
+					return { value: res };
+				}
+			}
+		}
+
+		// This method is to be deprecated. left here for compatibility for now.
 		this.variableResolvers = {
 			vault: this.resolveVaultVariable
 		}
@@ -76,7 +86,7 @@ class ServerlessVaultPlugin {
 
 	async resolveVaultVariable(src) {
 		// We expect a path of the form some/path.key and will then return a value
-		const vaultVar = src.slice(6);
+		const vaultVar = src.startsWith("vault:") ? src.slice(6) : src;
 		validateVaultVar(vaultVar);
 
 		const secretPath = vaultVar.split('.')[0];
@@ -92,8 +102,7 @@ class ServerlessVaultPlugin {
 		} catch(e) {
 			throw {
 				message: `Error communicating with vault: ${e.message} for var: ${src}`,
-				address: this.vaultAddress,
-				token: this.vaultToken
+				address: this.vaultAddress
 			};
 		}
 
